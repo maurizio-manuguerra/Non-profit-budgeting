@@ -1,4 +1,4 @@
-data.file=NULL
+data.file=NULL #replace with a file name, e.g. data.file="budget.csv"
 workdir="~/Dropbox/0.Research/budget/"
 n.proj=30
 n.comm=5
@@ -128,7 +128,7 @@ setwd(workdir)
 if (is.null(data.file)) { 
 	generate.data()
 } else {
-	cscore <<- read.csv(data.file, header=FALSE)
+	cscore <<- read.csv(data.file, header=TRUE)
 	n.proj = nrow(cscore)
 	n.comm = ncol(cscore)
 	proj.names = row.names(cscore)

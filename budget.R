@@ -61,7 +61,7 @@ display.optim.results=function(){
 	cat(" \n")
 	cat(paste(" Total return:   ",-round(expenditure,0),"[$]\n",sep=''))
 	cat(paste(" Total benefit:   ",-round(benefit,0),"[$]\n",sep=''))
-	cat(paste(" Total uncertaincy on benefit   ",round(uncert,0),"[$], i.e. ",round(100*uncert/benefit,2),"% of the total benefit\n",sep=''))
+	cat(paste(" Total uncertainty on benefit   ",round(uncert,0),"[$], i.e. ",round(100*uncert/benefit,2),"% of the total benefit\n",sep=''))
 	myplot(m,score,pch=19,main="Funded initiatives are in red.",xlab="Return [$]",ylab="Rank  ")
 	points(m[funded.proj],score[funded.proj],pch=19,col='red')
 	ind=order(preferences)
@@ -182,9 +182,7 @@ m.frontier.proj=m.frontier.proj[ind]
 score.frontier.proj=score.frontier.proj[ind]
 fit5 <- monpol(m.frontier.proj ~ score.frontier.proj, degree=degree.pref.fun)
 preferences = as.vector(predict(fit5, data.frame(score.frontier.proj=score)))
-par(mfrow=c(1,2))
-res=optimum.budget()
-display.optim.results()
+
 benefit=NULL
 risk=NULL
 top.risk=seq(0.001,0.05,.001)
@@ -194,8 +192,10 @@ for (benefit.at.risk in top.risk){
 	uncert=res$uncert
 	risk=c(risk,res$uncert/res$benefit)
 }
-plot(risk,benefit,xlab="Total variance of the total benefit to the university",ylab="Total contribution to the mission [$]", main="Choose the preferred level of uncertaincy and re-run the analyses.")
-lines(risk,benefit)
-par(mfrow=c(1,1))
+plot(risk*100,benefit,xlab="Total variance of the total benefit to the university",ylab="Total contribution to the mission [$]", main="Choose the preferred level of uncertainty and re-run the analyses.")
+lines(risk*100,benefit)
+benefit.at.risk=as.real(readline(prompt="\nBased on the plot, which percentage on the total benefit to the organization do you want to accept as maximum uncertainty? Please insert a number between 0 and 100 (omit the '%' sign).\nUncertainty = "))/100
+res=optimum.budget()
+display.optim.results()
 
 
